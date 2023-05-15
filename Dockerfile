@@ -4,6 +4,11 @@ ARG JAR_FILE=build/libs/*SNAPSHOT.jar
 
 WORKDIR /opt/app
 
-COPY ${JAR_FILE} yandex-lavka.jar
+COPY . .
+
+RUN ./gradlew build
+
+RUN cp ${JAR_FILE} yandex-lavka.jar
+EXPOSE 8080
 
 ENTRYPOINT ["java","-jar","yandex-lavka.jar"]

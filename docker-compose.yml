@@ -1,37 +1,32 @@
-version: "3.9"
-
+version: '3.9'
 services:
-  app:
-    container_name: app
-    build: .
-    ports:
-      - 8080:8080
+  application:
+    build: enrollment/updates/java
     restart: always
     environment:
-      POSTGRES_SERVER: localhost
-      POSTGRES_PORT: 8080
+      POSTGRES_DSN: postgresql://postgres:password@db/postgres
+      POSTGRES_SERVER: db
+      POSTGRES_PORT: 5432
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    links:
-      - db:db_domain
+      POSTGRES_PASSWORD: password
     depends_on:
       - db
+    ports:
+      - "8080:8080"
+    networks:
+      - enrollment
 
   db:
-    container_name: yandex-lavka-db
-    image: postgres:15.2
-    volumes:
-      - dbvolume:/var/lib/postgresql/dbvolume
-    ports:
-      - "5432:5432"
+    image: postgres:15.2-alpine
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    deploy:
-      restart_policy:
-        condition: on-failure
+      - POSTGRES_PASSWORD=password
+    expose:
+      - "5433"
+    restart: always
+    networks:
+      - enrollment
 
-volumes:
-  dbvolume:
+networks:
+  enrollment:
+    driver: bridge
