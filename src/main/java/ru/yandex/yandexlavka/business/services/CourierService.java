@@ -18,7 +18,7 @@ public class CourierService {
     }
 
     public List<CourierDto> getCouriers(int limit, int offset){
-        return (List<CourierDto>) repository.findAllWithLimitAndOffset(limit,offset);
+        return repository.findAllWithLimitAndOffset(limit,offset);
     }
 
     public Optional<CourierDto> getCouriersId(long id){
